@@ -1,69 +1,105 @@
 <?php
-require 'database.php';
-$user = null;
+session_start();
+include __DIR__ . '/vendor/autoload.php';
+require 'Models/database.php';
 
-if(!empty($_POST['user'])&&!empty($_POST['password'])) {
 
-  $records = $db->prepare('SELECT user,password FROM users WHERE user = :user');
-  $records->bindParam(':user', $_POST['user']);
-  $records->execute();
-  $results = $records->fetch(PDO::FETCH_ASSOC);
-  $message = '';
 
-  if(count($results) > 0){
-    if($_POST['password'] == $results['password']){
+use Phroute\Phroute\RouteCollector;
+use Phroute\Phroute\Dispatcher;
+
+$router = new RouteCollector();
+
+$router->group(array('prefix' => 'php-login-register'), function(RouteCollector $router){
+
+  function render ($template, array $data) {
+    extract($data);
+    if(file_exists($file = __DIR__ . '/Views//' . $template )) {
+      require $file;
+    }
+  }
+  function redirect($template) {
+    header('Location: /php-login-register' . $template);
+  }
+  $router->get('/', function(){
+    if( isset($_SESSION['user'])) {
+      require 'Models/database.php';
+      $records = $db->prepare('SELECT user,password FROM users WHERE user = :user');
+      $records->bindParam(':user', $_SESSION['user']);
+      $records->execute();
+      $results = $records->fetch(PDO::FETCH_ASSOC);
       $user = $results['user'];
     } else {
-      $message = 'Sorry,  your password is wrong!';
+      $user = null;
     }
-  } else {
-    $message = "Sorry, user gon't exist!";
-  }
-}
+    render('home.php', array(
+      'title' => 'Hello world!',
+      'user' => $user
+    ));
+  });
 
-if( isset($_SESSION['user'])) {
-  $records = $db->prepare('SELECT user,password FROM users WHERE user = :user');
-  $records->bindParam(':user', $_POST['user']);
-  $records->execute();
-  $results = $records->fetch(PDO::FETCH_ASSOC);
+  $router->post('/', function(){
+    if(!empty($_POST['user'])&&!empty($_POST['password'])) {
+      require 'Models/database.php';
+      $records = $db->prepare('SELECT user,password FROM users WHERE user = :user');
+      $records->bindParam(':user', $_POST['user']);
+      $records->execute();
+      $results = $records->fetch(PDO::FETCH_ASSOC);
+      $message = '';
 
-  $user = $results['user'];
-}
-?>
-
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Welcome</title>
-</head>
-<body>
-  <div  class="main">
-    <?php
-      if(!empty($message)){
-    ?> <p> <?php echo $message; ?> </p>
-       <a href="./index.php">Back to Home</a>
-    <?php
+      if(count($results) > 0){
+        if(password_verify($_POST['password'], $results['password'])){
+          $user = $results['user'];
+          $_SESSION['user'] = $results['user'];
+        } else {
+          $message = 'Sorry,  your password is wrong!';
+        }
+      } else {
+        $message = "Sorry, user gon't exist!";
       }
-    ?>
-    <?php if( !empty($user) ): ?>
+    }
+    render('home.php', array(
+      'title' => 'login',
+      'user' => $user,
+      'message' => $message
+    ));
+  });
 
-      <br />Welcome <?= $user; ?>
-      <br /><br />You are successfully logged in!
-      <br /><br />
-      <a href="logout.php">Logout?</a>
+  $router->get('register.php', function(){
+    render('register.php', array(
+      'title' => 'Register'
+    ));
+  });
 
-    <?php else: ?>
+  $router->post('register.php', function(){
+    if(!empty($_POST['user'])&&!empty($_POST['password'])) {
+      if($_POST['password'] != $_POST['confirm']) {
+        $message = "Confirm Password Error!";
+      } else {
+        require 'Models/database.php';
+        $records = $db->prepare("INSERT into  users(user,password) VALUES (:user, :password)");
+        $records->bindParam(':user', $_POST['user']);
+        $records->bindParam(':password', password_hash($_POST['password'], PASSWORD_DEFAULT));
+        if($records->execute()){
+          $message = 'Successful Register!';
+        } else {
+          $message = "Sorry, Register Failure!";
+        }
+      }
+    }
+    render('register.php', array(
+      'title' => 'Register',
+      'message' => $message
+    ));
+  });
 
-      <form action="index.php" method="post">
-        User: <input type="text" name="user">
-        Password: <input type="password" name="password">
-        <input type="submit" value="Login">
-      </form>
-      <a href="register.php">Register</a>
+  $router->get('logout.php', function(){
+      session_destroy();
+      redirect('/');
+  });
+});
+$dispatcher = (new Dispatcher($router->getData()));
+$response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
 
-    <?php endif; ?>
-    
-  </div>
-</body>
-</html>
+// Print out the value returned from the dispatched function
+// echo $response;
