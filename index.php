@@ -32,7 +32,7 @@ $router->group(array('prefix' => 'php-login-register'), function(RouteCollector 
     } else {
       $user = null;
     }
-    render('home.php', array(
+    render('home.html', array(
       'title' => 'Hello world!',
       'user' => $user
     ));
@@ -58,7 +58,7 @@ $router->group(array('prefix' => 'php-login-register'), function(RouteCollector 
         $message = "Sorry, user gon't exist!";
       }
     }
-    render('home.php', array(
+    render('home.html', array(
       'title' => 'login',
       'user' => $user,
       'message' => $message
@@ -66,7 +66,7 @@ $router->group(array('prefix' => 'php-login-register'), function(RouteCollector 
   });
 
   $router->get('register.php', function(){
-    render('register.php', array(
+    render('register.html', array(
       'title' => 'Register'
     ));
   });
@@ -87,7 +87,7 @@ $router->group(array('prefix' => 'php-login-register'), function(RouteCollector 
         }
       }
     }
-    render('register.php', array(
+    render('register.html', array(
       'title' => 'Register',
       'message' => $message
     ));

@@ -27,7 +27,7 @@ router逻辑是用的[phroute](https://github.com/mrjgreen/phroute).
 
   1. `phroute` 还不是很熟悉，需要研究
   2. `.htaccess`的配置需要学习一下
-  3. 还需要加个·`/Public`存放静态资源
+  3. 还需要加个`/Public`存放静态资源
 
 
 
