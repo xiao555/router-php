@@ -55,7 +55,7 @@ sudo nano /etc/hosts
 
 ### 运行
 
-重启xampp，在本地服务器上，浏览器打开`localhost` 和 `xiao555.com` 看看效果。
+重启xampp，在本地服务器上，浏览器打开[localhost](localhost) 和 [xiao555.com](xiao555.com) 看看效果。
 
 ### 说明
 
