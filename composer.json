@@ -1,5 +1,6 @@
 {
     "require": {
-        "phroute/phroute": "^2.1"
+        "phroute/phroute": "^2.1",
+        "catfan/Medoo": "^1.1"
     }
 }

@@ -6,6 +6,10 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitdb31a51417ad40eb0ef3aa46d240d739
 {
+    public static $files = array (
+        'c7359326b6707d98bdc176bf9ddeaebf' => __DIR__ . '/..' . '/catfan/medoo/medoo.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'P' => 
         array (

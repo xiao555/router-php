@@ -14,17 +14,20 @@ function render ($template, array $data) {
     require $file;
   }
 }
+
 function redirect($template) {
   header('Location: ' . $template);
 }
-$router->get('/', function(){
+
+$router->get('/', function() use ($database){
   if( isset($_SESSION['user'])) {
-    require 'Models/database.php';
-    $records = $db->prepare('SELECT user,password FROM users WHERE user = :user');
-    $records->bindParam(':user', $_SESSION['user']);
-    $records->execute();
-    $results = $records->fetch(PDO::FETCH_ASSOC);
-    $user = $results['user'];
+    $results = current($database->select("users", [
+      "user",
+      "password"
+    ], [
+      "user" => $_SESSION['user']
+    ]));
+    $user = $$results['user'];
   } else {
     $user = null;
   }
@@ -34,14 +37,15 @@ $router->get('/', function(){
   ));
 });
 
-$router->post('/', function(){
+$router->post('/', function() use ($database){
   $user = null;
   if(!empty($_POST['user'])&&!empty($_POST['password'])) {
-    require 'Models/database.php';
-    $records = $db->prepare('SELECT user,password FROM users WHERE user = :user');
-    $records->bindParam(':user', $_POST['user']);
-    $records->execute();
-    $results = $records->fetch(PDO::FETCH_ASSOC);
+    $results = current($database->select("users", [
+      "user",
+      "password"
+    ], [
+      "user" => $_POST['user']
+    ]));
     $message = '';
 
     if(count($results) > 0){
@@ -68,16 +72,17 @@ $router->get('register', function(){
   ));
 });
 
-$router->post('register', function(){
+$router->post('register', function() use ($database){
   if(!empty($_POST['user'])&&!empty($_POST['password'])) {
     if($_POST['password'] != $_POST['confirm']) {
       $message = "Confirm Password Error!";
     } else {
-      require 'Models/database.php';
-      $records = $db->prepare("INSERT into  users(user,password) VALUES (:user, :password)");
-      $records->bindParam(':user', $_POST['user']);
-      $records->bindParam(':password', password_hash($_POST['password'], PASSWORD_DEFAULT));
-      if($records->execute()){
+      $result_id = $database->insert("users", [
+        "user" => $_POST['user'],
+        "password" => password_hash($_POST['password'], PASSWORD_DEFAULT)
+      ]);
+      var_dump($result_id);
+      if($result_id ){
         $message = 'Successful Register!';
       } else {
         $message = "Sorry, Register Failure!";
