@@ -2,16 +2,24 @@
 session_start();
 include __DIR__ . '/vendor/autoload.php';
 require 'Models/database.php';
+require 'vendor/twig/twig/lib/Twig/Autoloader.php';
+Twig_Autoloader::register();
+
+$loader = new Twig_Loader_Filesystem('./Views/');
+$twig = new Twig_Environment($loader, array(
+    'cache' => false
+));
 
 use Phroute\Phroute\RouteCollector;
 use Phroute\Phroute\Dispatcher;
 
 $router = new RouteCollector();
 
-function render ($template, array $data) {
-  extract($data);
+function render ($template, array $data){
+  global $twig;
   if(file_exists($file = __DIR__ . '/Views//' . $template )) {
-    require $file;
+    // require $file;
+    echo $twig->render($template, $data);
   }
 }
 
@@ -20,16 +28,17 @@ function redirect($template) {
 }
 
 $router->get('/', function() use ($database){
-  if( isset($_SESSION['user'])) {
+  $user = null;
+  if( !empty($_COOKIE['xiao555name'])) {
     $results = current($database->select("users", [
       "user",
       "password"
     ], [
-      "user" => $_SESSION['user']
+      "user" => $_COOKIE['xiao555name']
     ]));
-    $user = $$results['user'];
-  } else {
-    $user = null;
+    if( password_verify($_COOKIE['xiao555pw'], $results['password']) ) {
+      $user = $results['user'];
+    };
   }
   render('home.html', array(
     'title' => 'Hello world!',
@@ -51,12 +60,16 @@ $router->post('/', function() use ($database){
     if(count($results) > 0){
       if(password_verify($_POST['password'], $results['password'])){
         $user = $results['user'];
-        $_SESSION['user'] = $results['user'];
+        // Remember Password
+        if(isset($_POST['remember'])) {
+          setcookie('xiao555name',$results['user'],time()+3600*24);
+          setcookie('xiao555pw',$_POST['password'],time()+3600*24);
+        }
       } else {
         $message = 'Sorry,  your password is wrong!';
       }
     } else {
-      $message = "Sorry, user gon't exist!";
+      $message = "Sorry, user don't exist!";
     }
   }
   render('home.html', array(
@@ -96,7 +109,8 @@ $router->post('register', function() use ($database){
 });
 
 $router->get('logout', function(){
-    session_destroy();
+    setcookie('xiao555name',null,time()-3600*24);
+    setcookie('xiao555pw',null,time()-3600*24);
     redirect('/');
 });
 

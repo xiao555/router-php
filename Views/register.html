@@ -2,17 +2,14 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title><?php echo $title; ?></title>
+  <title>{{ title }}</title>
 </head>
 <body>
   <div class="main">
-    <?php
-      if(!empty($message)){
-    ?> <p> <?php echo $message; ?> </p>
+    {% if message %}
+    <p> {{ message }}</p>
        <a href="/">Back to Home</a>
-    <?php
-      }
-    ?>
+    {% endif %}
     <form action="/register" method="post">
       user: <input type="text" name="user">
       password: <input type="password" name="password">

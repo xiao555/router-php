@@ -24,11 +24,22 @@ class ComposerStaticInitdb31a51417ad40eb0ef3aa46d240d739
         ),
     );
 
+    public static $prefixesPsr0 = array (
+        'T' => 
+        array (
+            'Twig_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/twig/lib',
+            ),
+        ),
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitdb31a51417ad40eb0ef3aa46d240d739::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitdb31a51417ad40eb0ef3aa46d240d739::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdb31a51417ad40eb0ef3aa46d240d739::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }
