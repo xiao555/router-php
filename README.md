@@ -19,7 +19,7 @@
 sudo nano /etc/hosts
 ```
 
-在最后添加: `127.0.0.1      xiao555.com # 你想设置的域名`
+在最后添加: `127.0.0.1      localtest # 你想设置的域名`
 
 2. 开启虚拟主机
 
@@ -43,7 +43,7 @@ sudo nano /etc/hosts
 ```conf
 <VirtualHost *:80>
     DocumentRoot  "/Applications/XAMPP/xamppfiles/htdocs/php-login-register/"
-    ServerName www.xiao555.com
+    ServerName localtest
 </VirtualHost>
 
 <VirtualHost *:80>
@@ -55,7 +55,8 @@ sudo nano /etc/hosts
 
 ### 运行
 
-重启xampp，在本地服务器上，浏览器打开[localhost](localhost) 和 [www.xiao555.com](xiao555.com) 看看效果。
+重启xampp，在本地服务器上，浏览器打开[localhost](localhost) 、 [localtest](localtest) 以及 [127.0.0.1](127.0.0.1) 看看效果。
+另外，也可以找一个闲置的域名解析成127.0.0.1，这样访问域名就会解析到本地。
 
 ### 说明
 
