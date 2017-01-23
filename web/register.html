@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ title }}</title>
+</head>
+<body>
+  <div class="main">
+    {% if message %}
+    <p> {{ message }}</p>
+       <a href="/">Back to Home</a>
+    {% endif %}
+    <form action="/register" method="post">
+      user: <input type="text" name="user">
+      password: <input type="password" name="password">
+      Confirm Password: <input type="password" name="confirm">
+      <input type="submit" name="Register">
+    </form>
+  </div>
+</body>
+</html>

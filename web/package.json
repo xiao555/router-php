@@ -1,0 +1,18 @@
+{
+  "name": "web",
+  "version": "1.0.0",
+  "description": "A simple frontend framework",
+  "main": "index.js",
+  "dependencies": {
+    "path": "^0.12.7",
+    "stylus": "^0.54.5",
+    "webpack": "^1.14.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "webpack --config webpack.config.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "xiao555",
+  "license": "ISC"
+}
