@@ -2,10 +2,10 @@
 session_start();
 include __DIR__ . '/vendor/autoload.php';
 require 'Models/database.php';
-require 'vendor/twig/twig/lib/Twig/Autoloader.php';
+// require 'vendor/twig/twig/lib/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
-$loader = new Twig_Loader_Filesystem('./Views/');
+$loader = new Twig_Loader_Filesystem('./web/');
 $twig = new Twig_Environment($loader, array(
     'cache' => false
 ));
@@ -17,7 +17,7 @@ $router = new RouteCollector();
 
 function render ($template, array $data){
   global $twig;
-  if(file_exists($file = __DIR__ . '/Views//' . $template )) {
+  if(file_exists($file = __DIR__ . '/web//' . $template )) {
     // require $file;
     echo $twig->render($template, $data);
   }
@@ -38,11 +38,14 @@ $router->get('/', function() use ($database){
     ]));
     if( password_verify($_COOKIE['xiao555pw'], $results['password']) ) {
       $user = $results['user'];
+      return render('home.html', array(
+        'title' => 'Welcome!',
+        'user' => $user
+      ));
     };
   }
-  render('home.html', array(
-    'title' => 'Hello world!',
-    'user' => $user
+  render('login.html', array(
+    'title' => 'Login in',
   ));
 });
 

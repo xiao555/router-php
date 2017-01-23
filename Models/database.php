@@ -1,7 +1,7 @@
 <?php
 
 // If you installed via composer, just use this code to requrie autoloader on the top of your projects.
-require 'vendor/autoload.php';
+// require 'vendor/autoload.php';
 
 // Initialize
 $database = new medoo([
