@@ -126,4 +126,6 @@ $router->get('logout', function(){
 });
 
 $dispatcher = (new Dispatcher($router->getData()));
-$response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+$url = explode('/', $_SERVER['REQUEST_URI']);
+$request = '/' . $url[count($url) - 1];
+$response = $dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $request);
