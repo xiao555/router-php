@@ -1,8 +1,16 @@
 <?php
 session_start();
 include __DIR__ . '/vendor/autoload.php';
-require 'Models/database.php';
-// require 'vendor/twig/twig/lib/Twig/Autoloader.php';
+
+$database = new medoo([
+    'database_type' => 'mysql',
+    'database_name' => 'login',
+    'server' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'charset' => 'utf8'
+]);
+
 Twig_Autoloader::register();
 
 $loader = new Twig_Loader_Filesystem('./web/');
