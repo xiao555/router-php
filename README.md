@@ -60,7 +60,6 @@ sudo nano /etc/hosts
 1. 普通方法
 
 本地直接访问即可，例如: `127.0.0.1/php-login-register/`(注意最后一个`/`).
-
 2. 配置虚拟主机
 
 重启xampp，在本地服务器上，浏览器打开[localhost](localhost) 、 [localtest](localtest) 以及 [127.0.0.1](127.0.0.1) 看看效果。
