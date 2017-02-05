@@ -18,8 +18,6 @@ var paths = {
   assets: path.join(__dirname, './src/assets'),
 }
 
-// var entries = getEntry('src/scripts/page/**/*.js', 'src/scripts/page/');
-
 var config = {
   context: paths.root,
   debug: true,
@@ -47,7 +45,7 @@ var config = {
                     'searchPaths': [
                         'views'
                     ]
-                }) },   //避免压缩html,https://github.com/webpack/html-loader/issues/50
+                }) },
       // Extract css files
       { test: /\.css$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader?sourceMap") },
       // Optionally extract less files
@@ -109,7 +107,7 @@ var config = {
         // proxy: 'http://localhost:3100/'
         server: { 
           baseDir: ['build'],
-          directory: true
+          directory: true  // with directory listing
         }
       },
       // plugin options 
@@ -119,13 +117,6 @@ var config = {
         reload: true
       }
     )
-    // new MutiHtmlWebpackPlugin({
-    //     templatePath: './views',
-    //     loader: 'html?attrs=img:src img:data-src!compile-nunjucks',
-    //     templateSuffix: '.html',
-    //     path: '../',
-    //     ignore: []
-    // })
   ]
 };
 
@@ -146,12 +137,6 @@ pages.forEach(function(pathname) {
         //     collapseWhitespace: false //删除空白符与换行符
         // }
     };
-    // if (pathname in config.entry) {
-    //     conf.favicon = 'src/imgs/favicon.ico';
-    //     conf.inject = 'body';
-    //     conf.chunks = ['vendors', pathname];
-    //     conf.hash = true;
-    // }
     config.plugins.push(new HtmlWebpackPlugin(conf));
 });
 
@@ -162,8 +147,8 @@ function getEntry(globPath, pathDir) {
 
     for (var i = 0; i < files.length; i++) {
         entry = files[i];
-        dirname = path.dirname(entry);
-        extname = path.extname(entry);
+        dirname = path.dirname(entry); // views/
+        extname = path.extname(entry); // [.ext]
         basename = path.basename(entry, extname);
         pathname = path.join(dirname, basename);
         pathname = pathDir ? pathname.replace(new RegExp('^' + pathDir), '') : pathname;

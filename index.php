@@ -1,7 +1,6 @@
 <?php
 session_start();
 include __DIR__ . '/vendor/autoload.php';
-define('ROOTPATH', __DIR__ . '/web/build/');
 
 $database = new medoo([
     'database_type' => 'mysql',
@@ -26,7 +25,7 @@ $router = new RouteCollector();
 
 function render ($template, array $data){
   global $twig;
-  if(file_exists($file = __DIR__ . '/web/views/' . $template )) {
+  if(file_exists($file = __DIR__ . '/web/build/' . $template )) {
     // require $file;
     echo $twig->render($template, $data);
   }
