@@ -25,7 +25,7 @@ $router = new RouteCollector();
 
 function render ($template, array $data){
   global $twig;
-  if(file_exists($file = __DIR__ . '/web/build/' . $template )) {
+  if(file_exists($file = __DIR__ . '//web/' . $template )) {
     // require $file;
     echo $twig->render($template, $data);
   }
