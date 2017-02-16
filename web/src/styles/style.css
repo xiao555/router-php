@@ -99,11 +99,18 @@ form input[type='submit']:hover {
   opacity: .8;
 }
 
-form input[type='submit'].login {
+form input[type='submit'].login,
+form input[type='submit'].register {
     background-color: #55a532;
     background-image: -webkit-linear-gradient(#85d063, #4f992f);
     background-image: linear-gradient(#85d063, #4f992f);
     border-color: #519d30;
+}
+
+.panel {
+  border: 1px solid #d8dee2;
+  padding: 20px;
+  margin-top: 20px;
 }
 /*  
    Error & Success Area Style
@@ -116,11 +123,13 @@ form input[type='submit'].login {
 .success {
     color: #4F8A10;
     background-color: #DFF2BF;
+    text-align: center;
 }
 
 .error {
     color: #D8000C;
     background-color: #FFBABA;
+    text-align: center;
 }
 
 /* Header */
@@ -131,6 +140,7 @@ form input[type='submit'].login {
   font-size: 13px;
   line-height: 20px;
   color: #333;
+  text-align: center;
 }
 
 .header .title {
@@ -145,20 +155,26 @@ form input[type='submit'].login {
 }
 
 .footer-links li {
-
+  display: inline-block;
+  padding: 0 10px;
 }
 
 /* Sign in */
-.sign {
+main.form {
   width: 80%;
   max-width: 300px;
   margin: 0 auto;
   padding: 100px 0;
 }
 
-.sign .title {
+main.form .title {
   text-align: center;
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 300;
   letter-spacing: -0.5px;
+}
+
+main img {
+  display: block;
+  margin: 0 auto;
 }

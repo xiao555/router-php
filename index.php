@@ -1,5 +1,8 @@
 <?php
 session_start();
+header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
+header("Cache-Control: no-cache, must-revalidate");
+// header("Pragma: no-cache");
 include __DIR__ . '/vendor/autoload.php';
 
 $database = new medoo([
@@ -67,8 +70,7 @@ $router->post('/', function() use ($database){
       "user" => $_POST['user']
     ]));
     $message = '';
-
-    if(count($results) > 0){
+    if($results){
       if(password_verify($_POST['password'], $results['password'])){
         $user = $results['user'];
         // Remember Password
@@ -76,6 +78,11 @@ $router->post('/', function() use ($database){
           setcookie('xiao555name',$results['user'],time()+3600*24);
           setcookie('xiao555pw',$_POST['password'],time()+3600*24);
         }
+        return render('home.html', array(
+          'title' => 'Home',
+          'user' => $user,
+          'message' => $message
+        ));
       } else {
         $message = 'Sorry,  your password is wrong!';
       }
@@ -83,10 +90,9 @@ $router->post('/', function() use ($database){
       $message = "Sorry, user don't exist!";
     }
   }
-  render('home.html', array(
-    'title' => 'login',
-    'user' => $user,
-    'message' => $message
+  render('login.html', array(
+    'title' => 'Login in',
+    'error' => $message
   ));
 });
 
@@ -97,6 +103,7 @@ $router->get('register', function(){
 });
 
 $router->post('register', function() use ($database){
+  $message = "";
   if(!empty($_POST['user'])&&!empty($_POST['password'])) {
     if($_POST['password'] != $_POST['confirm']) {
       $message = "Confirm Password Error!";
@@ -105,9 +112,12 @@ $router->post('register', function() use ($database){
         "user" => $_POST['user'],
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT)
       ]);
-      var_dump($result_id);
       if($result_id ){
         $message = 'Successful Register!';
+        return  render('login.html', array(
+                  'title' => 'Login in',
+                  'success' => $message
+                ));
       } else {
         $message = "Sorry, Register Failure!";
       }
